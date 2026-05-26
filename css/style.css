@@ -4,70 +4,68 @@
   margin: 0;
   padding: 0;
 }
- 
+
 :root {
-  --bg-color: #f4ebd9;        /* 昼：柔らかなベージュ */
-  --text-color: #3e3a36;      /* 昼：ダークブラウン */
+  /* カラーシステム（昼モード） */
+  --bg-color: #f4ebd9;        /* 柔らかなベージュ */
+  --text-color: #3e3a36;      /* ダークブラウン */
   --text-muted: #8c8275;
-  --footer-bg: #eaddca;       /* 昼：少し濃いベージュ */
+  --footer-bg: #eaddca;       /* 少し濃いベージュ */
   --faq-text: #666;
+
+  /* 背景テクスチャ（グリッド・ノイズ・テキストパターンの3層構造） */
   --noise-pattern: radial-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 0);
   --grid-pattern: 
     linear-gradient(to right, rgba(62, 58, 54, 0.04) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(62, 58, 54, 0.04) 1px, transparent 1px);
-  
-  /* 昼用の「menu」無限リピート背景データ（薄さ4%） */
-  /* 昼用の背景（cafeに変更） */
- /* 昼用の背景（文字サイズ20pxのまま、縦横の余白を極限までカット） */
   --menu-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='14'%3E%3Ctext x='7' y='12' font-family='Georgia' font-size='12' fill='rgba%2862,58,54,0.1%29' font-weight='bold'%3Ecafe%3C/text%3E%3C/svg%3E");
+  
+  /* コンポーネント装飾 */
   --card-bg: #fcf8f2;
   --card-shadow: -10px 10px 30px rgba(62, 58, 54, 0.05), 
                  -20px 20px 60px rgba(62, 58, 54, 0.03);
 }
- 
+
 body.dark-theme {
-  --bg-color: #2b251f;        /* 夜：深みのある珈琲ブラウン */
-  --text-color: #f4ebd9;      /* 夜：ベージュ文字 */
+  /* カラーシステム（夜モード） */
+  --bg-color: #2b251f;        /* 深みのある珈琲ブラウン */
+  --text-color: #f4ebd9;      /* ベージュ文字 */
   --text-muted: #bdae9a;
-  --footer-bg: #1c1713;       /* 夜：さらに濃いブラウン */
+  --footer-bg: #1c1713;       /* さらに濃いブラウン */
   --faq-text: #ccc;
+
+  /* 背景テクスチャ（夜モード用輝度調整） */
   --noise-pattern: radial-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 0);
   --grid-pattern: 
     linear-gradient(to right, rgba(244, 235, 217, 0.04) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(244, 235, 217, 0.04) 1px, transparent 1px);
-  
-  /* 夜用の「menu」無限リピート背景データ（薄さ3%） */
-  /* 夜用の背景（cafeに変更） */
- /* 夜用の背景（文字サイズ20pxのまま、縦横の余白を極限までカット） */
   --menu-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='14'%3E%3Ctext x='7' y='12' font-family='Georgia' font-size='12' fill='rgba%2862,58,54,0.1%29' font-weight='bold'%3Ecafe%3C/text%3E%3C/svg%3E");
+  
+  /* コンポーネント装飾 */
   --card-bg: #3d352e;
   --card-shadow: 0 0 40px rgba(244, 235, 217, 0.04), 
                  0 15px 50px rgba(0, 0, 0, 0.5);
 }
- 
+
 body {
   background-color: var(--bg-color);
-  
-  /* グリッド、ノイズ、そして全体の「menu」背景を3層に重ねて無限リピート */
   background-image: 
     var(--grid-pattern), 
     var(--noise-pattern),
     var(--menu-pattern);
-  
   background-size: 120px 120px, 7px 7px, 40px 14px;
-  background-attachment: fixed; /* 高級感を出すため、背景の文字はスクロールで動かないように固定 */
-
+  background-attachment: fixed; /* 背景パターンを視差固定（高級感の演出） */
   color: var(--text-color);
   font-family: 'Helvetica Neue', Arial, "Hiragino Kaku Gothic ProN", sans-serif;
   line-height: 1.6;
   transition: background-color 0.5s ease, color 0.5s ease;
 }
- 
+
 a {
   text-decoration: none;
   color: inherit;
 }
- 
+
 /* --- テーマ切り替えボタン --- */
 .theme-toggle-btn {
   position: fixed;
@@ -84,62 +82,109 @@ a {
   box-shadow: 0 4px 15px rgba(0,0,0,0.15);
   transition: background-color 0.5s ease, color 0.5s ease;
 }
- 
+
 /* --- 1. メインビジュアル (Hero) --- */
 .hero-section {
   padding: 0;
   margin: 0 auto;
   width: 100%;
 }
+
 .hero-bg-image {
   width: 100%;
   height: 80vh;
   overflow: hidden;
 }
+
 .hero-bg-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 0;
 }
+
 .hero-introduction {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 80px 20px 40px;
-  text-align: center;
+  padding: 60px 20px;
+  /* Flexboxコンテナ化：子要素を垂直・水平基準で中央揃えに配置 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+
+.hero-intro-bg {
+  position: relative;
+  width: 100%;
+  padding: 60px 40px;
+  border-radius: 12px;
+  overflow: hidden;
+  background-image: url("../images/home.jpg"); 
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--card-shadow);
+}
+
+/* 可読性確保用のオーバーレイフィルター（昼モード：55%） */
+.hero-intro-bg::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: rgba(62, 58, 54, 0.55);
+  z-index: 1;
+}
+
+/* 可読性確保用のオーバーレイフィルター（夜モード：70%） */
+body.dark-theme .hero-intro-bg::before {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.hero-intro-text {
+  position: relative;
+  z-index: 2; /* フィルターより前面に浮かす記述 */
+  color: #f4ebd9; /* 画像の上で視認性を保つため明るいトーンで固定 */
+}
+
 .hero-introduction h1 {
   font-size: 3.5rem;
   font-family: 'Georgia', serif;
   margin-bottom: 25px;
   letter-spacing: 2px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
 }
+
 .hero-introduction .lead {
   font-size: 1.1rem;
   max-width: 600px;
   margin: 0 auto 30px;
   line-height: 2;
-  color: var(--text-color);
+  color: #eaddca;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
+
 .hero-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 40px;
 }
+
 .hero-text {
   flex: 1;
 }
+
 .hero-text h1 {
   font-size: 3.5rem;
   font-family: 'Georgia', serif;
   margin-bottom: 20px;
 }
+
 .hero-image {
   flex: 1;
   display: flex;
   justify-content: center;
 }
+
 .hero-image img {
   width: 100%;
   max-width: 500px;
@@ -147,91 +192,106 @@ a {
   object-fit: cover;
   transition: transform 0.2s ease-out;
 }
+
+/* Ctaリンク（イラスト＋ボタンの横並びコンテナ） */
+.hero-btn-wrap {
+  display: inline-flex;  /* イラストとボタンをインライン横並び */
+  align-items: center;   /* 垂直軸のセンターを同期 */
+  justify-content: center;
+  margin-top: 30px; 
+  width: max-content;    /* 親要素の中央揃えを正しく機能させるため、コンテンツ幅に最小化 */
+  z-index: 10;
+}
+
 .btn-main {
   display: inline-block;
   background-color: var(--text-color);
   color: var(--bg-color);
   padding: 12px 40px;
   border-radius: 25px;
-  margin-top: 20px;
   font-weight: bold;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
 }
+
 .btn-main:hover {
   opacity: 0.8;
   transform: translateY(-2px);
 }
- 
+
+.btn-illustration {
+  width: 50px;
+  height: auto;
+  margin-right: 15px;    /* 右側にマージンを持たせ、メインボタンを押し出して固定 */
+  object-fit: contain;
+}
+
 /* --- セクション共通タイトル --- */
 .section-title {
   text-align: center;
   font-size: 2.5rem;
   font-family: 'Georgia', serif;
 }
+
 .section-subtitle {
   text-align: center;
   color: var(--text-muted);
   margin-bottom: 60px;
 }
- 
+
 /* --- 2. メニューセクション --- */
 .menu-section {
   padding: 0 0 100px 0;
   position: relative;
   overflow: hidden;
 }
+
 .menu-heading-bg {
   width: 100%;
-  height: 350px; /* 画像の縦幅（お好みで400pxなどに広げてもOK） */
-  
-  /* 【★ここを書き換え！】imagesフォルダに入れた、新しい画像の名前を指定してください */
+  height: 350px;
   background-image: url("../images/menu.jpg"); 
-  
   background-size: cover;
   background-position: center;
-  background-attachment: fixed; /* スクロールした時に画像がその場に固定されるオシャレ演出 */
-  
+  background-attachment: fixed; /* パララックス（背景固定）エフェクト */
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 80px;
   position: relative;
 }
+
 .menu-heading-bg::before {
   content: "";
   position: absolute;
   top: 0; left: 0; width: 100%; height: 100%;
-  background-color: rgba(62, 58, 54, 0.4); /* 昼：ほんのり黒い半透明（40%） */
+  background-color: rgba(62, 58, 54, 0.4);
   z-index: 1;
 }
 
-/* 夜モードの時は、フィルターをもう少し深めの黒にして暗闇になじませる */
 body.dark-theme .menu-heading-bg::before {
-  background-color: rgba(0, 0, 0, 0.6); /* 夜：強めの黒半透明（60%） */
+  background-color: rgba(0, 0, 0, 0.6);
 }
 
-/* ★新しく追加：画像の上に乗る文字の装飾 */
 .menu-heading-text {
   position: relative;
-  z-index: 2; /* フィルターより手前に文字を出す */
+  z-index: 2;
   text-align: center;
 }
 
-/* 画像の上で見やすくなるように、文字色を白（ベージュ系）にします */
 .menu-heading-text .section-title {
   color: #f4ebd9; 
-  font-size: 3rem; /* 文字を少し大きくして看板らしく */
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* 文字の後ろに影をつけて読みやすく */
+  font-size: 3rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
   margin-bottom: 10px;
 }
 
 .menu-heading-text .section-subtitle {
   color: #eaddca;
   font-size: 1.2rem;
-  margin-bottom: 0; /* 元々あった大きな下余白をリセット */
+  margin-bottom: 0;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
- 
+
 .menu-list {
   display: flex;
   flex-direction: column;
@@ -241,6 +301,7 @@ body.dark-theme .menu-heading-bg::before {
   position: relative;
   z-index: 1;
 }
+
 .menu-item {
   display: flex;
   align-items: center;
@@ -250,24 +311,20 @@ body.dark-theme .menu-heading-bg::before {
   padding: 40px;
   border-radius: 8px;
   box-shadow: var(--card-shadow);
-  
-  /* 初期状態で消えないように設定を完全に固定 */
   opacity: 1 !important;
   transform: translateY(0) !important;
-  
   transition: opacity 1.0s ease, transform 0.5s ease, box-shadow 0.3s ease; 
 }
+
 .menu-item.reverse {
-  flex-direction: row-reverse;
+  flex-direction: row-reverse; /* カタログデザインの交互配置制御 */
 }
-.menu-item.active {
-  opacity: 1;
-  transform: translateY(0);
-}
+
 .menu-item.active:hover {
   transform: translateY(-5px);
   box-shadow: 0 20px 40px rgba(0,0,0,0.12);
 }
+
 .item-image img {
   width: 320px;
   height: 320px;
@@ -275,18 +332,22 @@ body.dark-theme .menu-heading-bg::before {
   object-fit: cover;
   box-shadow: 0 10px 25px var(--card-shadow);
 }
+
 .item-text {
   flex: 1;
 }
+
 .item-text h3 {
   font-size: 2.2rem;
   font-family: 'Georgia', serif;
 }
+
 .item-text h4 {
   font-size: 1.1rem;
   color: var(--text-muted);
   margin-bottom: 15px;
 }
+
 .btn-text {
   display: inline-block;
   margin-top: 15px;
@@ -294,19 +355,22 @@ body.dark-theme .menu-heading-bg::before {
   border-bottom: 1px solid var(--text-color);
   padding-bottom: 2px;
 }
- 
+
 /* --- 3. FAQセクション --- */
 .faq-section {
   padding: 100px 20px;
 }
+
 .faq-container {
   max-width: 800px;
   margin: 0 auto;
 }
+
 .faq-item {
   border-bottom: 1px solid var(--text-muted);
   margin-bottom: 15px;
 }
+
 .faq-question {
   width: 100%;
   text-align: left;
@@ -320,25 +384,30 @@ body.dark-theme .menu-heading-bg::before {
   display: flex;
   justify-content: space-between;
 }
+
 .faq-question::after {
   content: '＋';
 }
+
 .faq-question.active::after {
   content: 'ー';
 }
+
 .faq-answer {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease-out;
 }
+
 .faq-answer.open {
   max-height: 200px; 
 }
+
 .faq-answer p {
   padding-bottom: 15px;
   color: var(--faq-text);
 }
- 
+
 /* --- 4. アクセス & フッター --- */
 .footer-section {
   background-color: var(--footer-bg);
@@ -346,6 +415,7 @@ body.dark-theme .menu-heading-bg::before {
   margin-top: 100px;
   transition: background-color 0.5s ease;
 }
+
 .footer-container {
   display: flex;
   justify-content: space-between;
@@ -353,24 +423,30 @@ body.dark-theme .menu-heading-bg::before {
   margin: 0 auto;
   gap: 40px;
 }
+
 .footer-info h2, .footer-sns h3 {
   font-family: 'Georgia', serif;
   margin-bottom: 20px;
 }
+
 .info-list dt {
   font-weight: bold;
   margin-top: 10px;
 }
+
 .info-list dd {
   margin-bottom: 10px;
   color: var(--text-muted);
 }
+
 .sns-links {
   list-style: none;
 }
+
 .sns-links li {
   margin-bottom: 12px;
 }
+
 .sns-btn {
   display: inline-block;
   padding: 8px 20px;
@@ -382,26 +458,42 @@ body.dark-theme .menu-heading-bg::before {
   text-align: center;
   transition: background-color 0.5s ease, color 0.5s ease;
 }
+
 .copyright {
   text-align: center;
   margin-top: 60px;
   font-size: 0.85rem;
   color: var(--text-muted);
 }
- 
+
 /* --- 5. レスポンシブ（スマホ対応） --- */
 @media (max-width: 768px) {
   .hero-container, .menu-item, .menu-item.reverse, .footer-container {
     flex-direction: column;
     text-align: center;
   }
+
   .item-image img {
     width: 260px;
     height: 260px;
   }
+
   .theme-toggle-btn {
     top: auto;
     bottom: 20px;
     right: 20px;
+  }
+
+  .hero-intro-bg {
+    padding: 40px 20px;
+  }
+
+  .hero-introduction h1 {
+    font-size: 2.5rem;
+  }
+
+  .btn-illustration {
+    width: 40px;
+    margin-right: 10px;
   }
 }
