@@ -1,4 +1,6 @@
-/* --- リセット & 変数設計（テーマ切り替え） --- */
+/* ==========================================================================
+   # リセット & 変数設計（テーマ切り替え）
+   ========================================================================== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -54,7 +56,7 @@ body {
     var(--noise-pattern),
     var(--menu-pattern);
   background-size: 120px 120px, 7px 7px, 40px 14px;
-  background-attachment: fixed; /* 背景パターンを視差固定（高級感の演出） */
+  background-attachment: fixed; /* 高級感を出すため背景パターンを視差固定 */
   color: var(--text-color);
   font-family: 'Helvetica Neue', Arial, "Hiragino Kaku Gothic ProN", sans-serif;
   line-height: 1.6;
@@ -83,7 +85,9 @@ a {
   transition: background-color 0.5s ease, color 0.5s ease;
 }
 
-/* --- 1. メインビジュアル (Hero) --- */
+/* ==========================================================================
+   # 1. メインビジュアル (Hero)
+   ========================================================================== */
 .hero-section {
   padding: 0;
   margin: 0 auto;
@@ -107,7 +111,7 @@ a {
   max-width: 900px;
   margin: 0 auto;
   padding: 60px 20px;
-  /* Flexboxコンテナ化：子要素を垂直・水平基準で中央揃えに配置 */
+  /* Flexboxコンテナ化：子要素を垂直軸基準で中央揃えに配置 */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -141,8 +145,8 @@ body.dark-theme .hero-intro-bg::before {
 
 .hero-intro-text {
   position: relative;
-  z-index: 2; /* フィルターより前面に浮かす記述 */
-  color: #f4ebd9; /* 画像の上で視認性を保つため明るいトーンで固定 */
+  z-index: 2; /* フィルターより前面に配置 */
+  color: #f4ebd9; /* 視認性を保つため明るいトーンで固定 */
 }
 
 .hero-introduction h1 {
@@ -193,13 +197,13 @@ body.dark-theme .hero-intro-bg::before {
   transition: transform 0.2s ease-out;
 }
 
-/* Ctaリンク（イラスト＋ボタンの横並びコンテナ） */
+/* CTAリンク（イラスト＋ボタンの横並びコンテナ） */
 .hero-btn-wrap {
-  display: inline-flex;  /* イラストとボタンをインライン横並び */
+  display: inline-flex;  /* イラストとボタンを横並び */
   align-items: center;   /* 垂直軸のセンターを同期 */
   justify-content: center;
   margin-top: 30px; 
-  width: max-content;    /* 親要素の中央揃えを正しく機能させるため、コンテンツ幅に最小化 */
+  width: max-content;    /* 親要素の等倍中央揃えを正しく機能させるため中身に依存させる */
   z-index: 10;
 }
 
@@ -222,7 +226,7 @@ body.dark-theme .hero-intro-bg::before {
 .btn-illustration {
   width: 50px;
   height: auto;
-  margin-right: 15px;    /* 右側にマージンを持たせ、メインボタンを押し出して固定 */
+  margin-right: 15px;    /* ボタンとの間に適切な固定余白を担保 */
   object-fit: contain;
 }
 
@@ -239,20 +243,23 @@ body.dark-theme .hero-intro-bg::before {
   margin-bottom: 60px;
 }
 
-/* --- 2. メニューセクション --- */
+/* ==========================================================================
+   # 2. メニューセクション
+   ========================================================================== */
 .menu-section {
   padding: 0 0 100px 0;
   position: relative;
   overflow: hidden;
 }
 
+/* 固定背景（パララックス）ヘッダーエリア */
 .menu-heading-bg {
   width: 100%;
   height: 350px;
   background-image: url("../images/menu.jpg"); 
   background-size: cover;
   background-position: center;
-  background-attachment: fixed; /* パララックス（背景固定）エフェクト */
+  background-attachment: fixed;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -292,6 +299,7 @@ body.dark-theme .menu-heading-bg::before {
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
+/* リスト・アイテム構造 */
 .menu-list {
   display: flex;
   flex-direction: column;
@@ -311,18 +319,21 @@ body.dark-theme .menu-heading-bg::before {
   padding: 40px;
   border-radius: 8px;
   box-shadow: var(--card-shadow);
+  
+  /* スクロール連動フェードイン用の初期値（非表示状態） */
   opacity: 0;
   transform: translateY(30px);
   transition: opacity 1.0s ease, transform 0.5s ease, box-shadow 0.3s ease; 
 }
 
+/* Intersection Observer発火時の表示スタイル */
 .menu-item.active {
   opacity: 1;
   transform: translateY(0);
 }
 
 .menu-item.reverse {
-  flex-direction: row-reverse; /* カタログデザインの交互配置制御 */
+  flex-direction: row-reverse; /* 左右交互配置の制御 */
 }
 
 .menu-item.active:hover {
@@ -330,6 +341,7 @@ body.dark-theme .menu-heading-bg::before {
   box-shadow: 0 20px 40px rgba(0,0,0,0.12);
 }
 
+/* アイテム内要素のディテール */
 .item-image img {
   width: 320px;
   height: 320px;
@@ -361,7 +373,27 @@ body.dark-theme .menu-heading-bg::before {
   padding-bottom: 2px;
 }
 
-/* --- 3. FAQセクション --- */
+/* LP用その場詳細表示エリア（アコーディオン） */
+.menu-detail {
+  max-height: 0;       /* 初期状態は閉じた状態（高さをゼロ化） */
+  overflow: hidden;    /* 領域外コンテンツのクリップ */
+  transition: max-height 0.4s ease-out; /* 開閉時のトグルアニメーション */
+}
+
+.menu-detail p {
+  padding-top: 15px;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+
+.menu-detail.open {
+  max-height: 300px;   /* 展開時の許容最大高さ */
+}
+
+/* ==========================================================================
+   # 3. FAQセクション
+   ========================================================================== */
 .faq-section {
   padding: 100px 20px;
 }
@@ -413,7 +445,9 @@ body.dark-theme .menu-heading-bg::before {
   color: var(--faq-text);
 }
 
-/* --- 4. アクセス & フッター --- */
+/* ==========================================================================
+   # 4. アクセス & フッター
+   ========================================================================== */
 .footer-section {
   background-color: var(--footer-bg);
   padding: 80px 40px 40px;
@@ -471,7 +505,9 @@ body.dark-theme .menu-heading-bg::before {
   color: var(--text-muted);
 }
 
-/* --- 5. レスポンシブ（スマホ対応） --- */
+/* ==========================================================================
+   # 5. レスポンシブ（スマホ対応）
+   ========================================================================== */
 @media (max-width: 768px) {
   .hero-container, .menu-item, .menu-item.reverse, .footer-container {
     flex-direction: column;
