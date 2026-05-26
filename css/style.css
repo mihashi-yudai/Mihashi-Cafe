@@ -10,8 +10,18 @@
   --text-color: #3e3a36;      /* 昼：ダークブラウン */
   --text-muted: #8c8275;
   --footer-bg: #eaddca;       /* 昼：少し濃いベージュ */
-  --card-shadow: rgba(0, 0, 0, 0.08);
   --faq-text: #666;
+  --noise-pattern: radial-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 0);
+  --grid-pattern: 
+    linear-gradient(to right, rgba(62, 58, 54, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(62, 58, 54, 0.04) 1px, transparent 1px);
+  
+  /* 昼用の「menu」無限リピート背景データ（薄さ4%） */
+  --menu-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='100'%3E%3Ctext x='20' y='50' font-family='Georgia' font-size='11' fill='rgba%2862,58,54,0.04%29' font-weight='bold' letter-spacing='0.1em'%3Emenu%3C/text%3E%3C/svg%3E");
+  
+  --card-bg: rgba(255, 255, 255, 0.6);
+  --card-shadow: -10px 10px 30px rgba(62, 58, 54, 0.05), 
+                 -20px 20px 60px rgba(62, 58, 54, 0.03);
 }
  
 body.dark-theme {
@@ -19,12 +29,32 @@ body.dark-theme {
   --text-color: #f4ebd9;      /* 夜：ベージュ文字 */
   --text-muted: #bdae9a;
   --footer-bg: #1c1713;       /* 夜：さらに濃いブラウン */
-  --card-shadow: rgba(0, 0, 0, 0.4);
   --faq-text: #ccc;
+  --noise-pattern: radial-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 0);
+  --grid-pattern: 
+    linear-gradient(to right, rgba(244, 235, 217, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(244, 235, 217, 0.04) 1px, transparent 1px);
+  
+  /* 夜用の「menu」無限リピート背景データ（薄さ3%） */
+  --menu-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='100'%3E%3Ctext x='20' y='50' font-family='Georgia' font-size='11' fill='rgba%28244,235,217,0.03%29' font-weight='bold' letter-spacing='0.1em'%3Emenu%3C/text%3E%3C/svg%3E");
+  
+  --card-bg: rgba(28, 23, 19, 0.6);
+  --card-shadow: 0 0 40px rgba(244, 235, 217, 0.04), 
+                 0 15px 50px rgba(0, 0, 0, 0.5);
 }
  
 body {
   background-color: var(--bg-color);
+  
+  /* グリッド、ノイズ、そして全体の「menu」背景を3層に重ねて無限リピート */
+  background-image: 
+    var(--grid-pattern), 
+    var(--noise-pattern),
+    var(--menu-pattern);
+  
+  background-size: 120px 120px, 7px 7px, 160px 100px;
+  background-attachment: fixed; /* 高級感を出すため、背景の文字はスクロールで動かないように固定 */
+
   color: var(--text-color);
   font-family: 'Helvetica Neue', Arial, "Hiragino Kaku Gothic ProN", sans-serif;
   line-height: 1.6;
@@ -55,9 +85,39 @@ a {
  
 /* --- 1. メインビジュアル (Hero) --- */
 .hero-section {
-  padding: 100px 40px 60px;
-  max-width: 1200px;
+  padding: 0;
   margin: 0 auto;
+  width: 100%;
+}
+.hero-bg-image {
+  width: 100%;
+  height: 80vh;
+  overflow: hidden;
+}
+.hero-bg-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+}
+.hero-introduction {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 80px 20px 40px;
+  text-align: center;
+}
+.hero-introduction h1 {
+  font-size: 3.5rem;
+  font-family: 'Georgia', serif;
+  margin-bottom: 25px;
+  letter-spacing: 2px;
+}
+.hero-introduction .lead {
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto 30px;
+  line-height: 2;
+  color: var(--text-color);
 }
 .hero-container {
   display: flex;
@@ -81,19 +141,23 @@ a {
 .hero-image img {
   width: 100%;
   max-width: 500px;
-  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; /* 有機的な波型切り抜き */
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
   object-fit: cover;
-  transition: transform 0.2s ease-out; /* パララックス用のなめらか設定 */
+  transition: transform 0.2s ease-out;
 }
 .btn-main {
   display: inline-block;
   background-color: var(--text-color);
   color: var(--bg-color);
-  padding: 12px 30px;
+  padding: 12px 40px;
   border-radius: 25px;
   margin-top: 20px;
   font-weight: bold;
-  transition: background-color 0.5s ease, color 0.5s ease;
+  transition: all 0.3s ease;
+}
+.btn-main:hover {
+  opacity: 0.8;
+  transform: translateY(-2px);
 }
  
 /* --- セクション共通タイトル --- */
@@ -111,31 +175,45 @@ a {
 /* --- 2. メニューセクション --- */
 .menu-section {
   padding: 100px 20px;
+  position: relative;
+  overflow: hidden;
 }
+ 
 .menu-list {
   display: flex;
   flex-direction: column;
-  gap: 100px;
+  gap: 60px;
   max-width: 1000px;
   margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 .menu-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 60px;
-  /* スクロールアニメーション用の初期状態（隠す） */
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 1.0s ease, transform 1.0s ease;
+  background-color: var(--card-bg); 
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+  
+  /* 初期状態で消えないように設定を完全に固定 */
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  
+  transition: opacity 1.0s ease, transform 0.5s ease, box-shadow 0.3s ease; 
 }
 .menu-item.reverse {
   flex-direction: row-reverse;
 }
-/* JSで画面に入ったら表示 */
 .menu-item.active {
   opacity: 1;
   transform: translateY(0);
+}
+.menu-item.active:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.12);
 }
 .item-image img {
   width: 320px;
@@ -164,7 +242,7 @@ a {
   padding-bottom: 2px;
 }
  
-/* --- 3. FAQセクション（自作アコーディオン） --- */
+/* --- 3. FAQセクション --- */
 .faq-section {
   padding: 100px 20px;
 }
@@ -201,7 +279,7 @@ a {
   transition: max-height 0.3s ease-out;
 }
 .faq-answer.open {
-  max-height: 120px; /* 文字量に応じて調整 */
+  max-height: 200px; 
 }
 .faq-answer p {
   padding-bottom: 15px;
@@ -270,8 +348,7 @@ a {
   }
   .theme-toggle-btn {
     top: auto;
-    bottom: 20px; /* スマホは押しやすいように右下に配置を変更 */
+    bottom: 20px;
     right: 20px;
   }
 }
- 
