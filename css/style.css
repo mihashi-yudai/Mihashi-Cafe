@@ -1,0 +1,277 @@
+/* --- リセット & 変数設計（テーマ切り替え） --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+ 
+:root {
+  --bg-color: #f4ebd9;        /* 昼：柔らかなベージュ */
+  --text-color: #3e3a36;      /* 昼：ダークブラウン */
+  --text-muted: #8c8275;
+  --footer-bg: #eaddca;       /* 昼：少し濃いベージュ */
+  --card-shadow: rgba(0, 0, 0, 0.08);
+  --faq-text: #666;
+}
+ 
+body.dark-theme {
+  --bg-color: #2b251f;        /* 夜：深みのある珈琲ブラウン */
+  --text-color: #f4ebd9;      /* 夜：ベージュ文字 */
+  --text-muted: #bdae9a;
+  --footer-bg: #1c1713;       /* 夜：さらに濃いブラウン */
+  --card-shadow: rgba(0, 0, 0, 0.4);
+  --faq-text: #ccc;
+}
+ 
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Helvetica Neue', Arial, "Hiragino Kaku Gothic ProN", sans-serif;
+  line-height: 1.6;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+ 
+a {
+  text-decoration: none;
+  color: inherit;
+}
+ 
+/* --- テーマ切り替えボタン --- */
+.theme-toggle-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  padding: 10px 20px;
+  background-color: var(--text-color);
+  color: var(--bg-color);
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+ 
+/* --- 1. メインビジュアル (Hero) --- */
+.hero-section {
+  padding: 100px 40px 60px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.hero-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+}
+.hero-text {
+  flex: 1;
+}
+.hero-text h1 {
+  font-size: 3.5rem;
+  font-family: 'Georgia', serif;
+  margin-bottom: 20px;
+}
+.hero-image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+.hero-image img {
+  width: 100%;
+  max-width: 500px;
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; /* 有機的な波型切り抜き */
+  object-fit: cover;
+  transition: transform 0.2s ease-out; /* パララックス用のなめらか設定 */
+}
+.btn-main {
+  display: inline-block;
+  background-color: var(--text-color);
+  color: var(--bg-color);
+  padding: 12px 30px;
+  border-radius: 25px;
+  margin-top: 20px;
+  font-weight: bold;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+ 
+/* --- セクション共通タイトル --- */
+.section-title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-family: 'Georgia', serif;
+}
+.section-subtitle {
+  text-align: center;
+  color: var(--text-muted);
+  margin-bottom: 60px;
+}
+ 
+/* --- 2. メニューセクション --- */
+.menu-section {
+  padding: 100px 20px;
+}
+.menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 100px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 60px;
+  /* スクロールアニメーション用の初期状態（隠す） */
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 1.0s ease, transform 1.0s ease;
+}
+.menu-item.reverse {
+  flex-direction: row-reverse;
+}
+/* JSで画面に入ったら表示 */
+.menu-item.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+.item-image img {
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 10px 25px var(--card-shadow);
+}
+.item-text {
+  flex: 1;
+}
+.item-text h3 {
+  font-size: 2.2rem;
+  font-family: 'Georgia', serif;
+}
+.item-text h4 {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  margin-bottom: 15px;
+}
+.btn-text {
+  display: inline-block;
+  margin-top: 15px;
+  font-weight: bold;
+  border-bottom: 1px solid var(--text-color);
+  padding-bottom: 2px;
+}
+ 
+/* --- 3. FAQセクション（自作アコーディオン） --- */
+.faq-section {
+  padding: 100px 20px;
+}
+.faq-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.faq-item {
+  border-bottom: 1px solid var(--text-muted);
+  margin-bottom: 15px;
+}
+.faq-question {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 15px 0;
+  cursor: pointer;
+  color: var(--text-color);
+  display: flex;
+  justify-content: space-between;
+}
+.faq-question::after {
+  content: '＋';
+}
+.faq-question.active::after {
+  content: 'ー';
+}
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+.faq-answer.open {
+  max-height: 120px; /* 文字量に応じて調整 */
+}
+.faq-answer p {
+  padding-bottom: 15px;
+  color: var(--faq-text);
+}
+ 
+/* --- 4. アクセス & フッター --- */
+.footer-section {
+  background-color: var(--footer-bg);
+  padding: 80px 40px 40px;
+  margin-top: 100px;
+  transition: background-color 0.5s ease;
+}
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1000px;
+  margin: 0 auto;
+  gap: 40px;
+}
+.footer-info h2, .footer-sns h3 {
+  font-family: 'Georgia', serif;
+  margin-bottom: 20px;
+}
+.info-list dt {
+  font-weight: bold;
+  margin-top: 10px;
+}
+.info-list dd {
+  margin-bottom: 10px;
+  color: var(--text-muted);
+}
+.sns-links {
+  list-style: none;
+}
+.sns-links li {
+  margin-bottom: 12px;
+}
+.sns-btn {
+  display: inline-block;
+  padding: 8px 20px;
+  border: 1px solid var(--text-color);
+  border-radius: 4px;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  width: 160px;
+  text-align: center;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+.copyright {
+  text-align: center;
+  margin-top: 60px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+ 
+/* --- 5. レスポンシブ（スマホ対応） --- */
+@media (max-width: 768px) {
+  .hero-container, .menu-item, .menu-item.reverse, .footer-container {
+    flex-direction: column;
+    text-align: center;
+  }
+  .item-image img {
+    width: 260px;
+    height: 260px;
+  }
+  .theme-toggle-btn {
+    top: auto;
+    bottom: 20px; /* スマホは押しやすいように右下に配置を変更 */
+    right: 20px;
+  }
+}
+ 
