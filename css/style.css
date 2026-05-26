@@ -509,14 +509,23 @@ body.dark-theme .menu-heading-bg::before {
    # 5. レスポンシブ（スマホ対応）
    ========================================================================== */
 @media (max-width: 768px) {
-  .hero-container, .menu-item, .menu-item.reverse, .footer-container {
+  .hero-container, .menu-item.reverse, .footer-container {
     flex-direction: column;
+  }
+
+  .menu-item {
+    flex-direction: column;
+    align-items: stretch; 
+  }
+
+  .item-text {
     text-align: center;
   }
 
   .item-image img {
     width: 260px;
     height: 260px;
+    margin: 0 auto;
   }
 
   .theme-toggle-btn {
